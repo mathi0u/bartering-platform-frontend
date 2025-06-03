@@ -1,0 +1,18 @@
+/* App root styles for better scrolling */
+:host {
+  display: block;
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* Ensure smooth scrolling on all elements */
+* {
+  scroll-behavior: smooth;
+}
+
+/* Fix for mobile address bar issues */
+.app-container {
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+}
