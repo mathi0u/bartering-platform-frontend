@@ -1,7 +1,8 @@
 import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 import { Item } from '../items/items.service';
+import { environment } from '../../environments/environment';
 
 export interface BarterRequest {
   id: string;
@@ -37,7 +38,7 @@ export interface CreateBarterRequestDto {
   providedIn: 'root'
 })
 export class BarterService {
-  private apiUrl = 'http://localhost:3000';
+  private apiUrl = environment.apiUrl;
 
   loading = signal(false);
   receivedRequests = signal<BarterRequest[]>([]);
@@ -46,14 +47,14 @@ export class BarterService {
   constructor(private http: HttpClient) {}
 
   // Async methods for easier use in components
-  async createBarterRequest(request: CreateBarterRequestDto): Promise<BarterRequest> {
-    return await this.http.post<BarterRequest>(`${this.apiUrl}/barter`, request).toPromise() as BarterRequest;
+  async createBarterRequest(request: CreateBarterRequestDto) {
+    return await firstValueFrom(this.http.post<BarterRequest>(`${this.apiUrl}/barter`, request));
   }
 
-  async getReceivedRequests(): Promise<BarterRequest[]> {
+  async getReceivedRequests() {
     this.loading.set(true);
     try {
-      const requests = await this.http.get<BarterRequest[]>(`${this.apiUrl}/barter/received`).toPromise();
+      const requests = await firstValueFrom(this.http.get<BarterRequest[]>(`${this.apiUrl}/barter/received`));
       this.loading.set(false);
       return requests || [];
     } catch (error) {
@@ -62,10 +63,10 @@ export class BarterService {
     }
   }
 
-  async getSentRequests(): Promise<BarterRequest[]> {
+  async getSentRequests() {
     this.loading.set(true);
     try {
-      const requests = await this.http.get<BarterRequest[]>(`${this.apiUrl}/barter/sent`).toPromise();
+      const requests = await firstValueFrom(this.http.get<BarterRequest[]>(`${this.apiUrl}/barter/sent`));
       this.loading.set(false);
       return requests || [];
     } catch (error) {
@@ -75,15 +76,14 @@ export class BarterService {
   }
 
   async updateRequestStatus(id: string, status: 'accepted' | 'rejected'): Promise<BarterRequest> {
-    return await this.http.put<BarterRequest>(`${this.apiUrl}/barter/${id}`, { status }).toPromise() as BarterRequest;
+    return await firstValueFrom(this.http.put<BarterRequest>(`${this.apiUrl}/barter/${id}`, { status }));
   }
 
-  // Observable methods for reactive programming
-  loadReceivedRequests(): Observable<BarterRequest[]> {
+  loadReceivedRequests(){
     return this.http.get<BarterRequest[]>(`${this.apiUrl}/barter/received`);
   }
 
-  loadSentRequests(): Observable<BarterRequest[]> {
+  loadSentRequests() {
     return this.http.get<BarterRequest[]>(`${this.apiUrl}/barter/sent`);
   }
 }

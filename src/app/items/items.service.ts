@@ -1,6 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export interface Item {
   id: string;
@@ -32,7 +33,7 @@ export interface CreateItemDto {
   providedIn: 'root'
 })
 export class ItemsService {
-  private apiUrl = 'http://localhost:3000';
+  private apiUrl = environment.apiUrl;
 
   loading = signal(false);
   items = signal<Item[]>([]);
@@ -41,10 +42,10 @@ export class ItemsService {
   constructor(private http: HttpClient) {}
 
   // Async methods for easier use in components
-  async getAllItems(): Promise<Item[]> {
+  async getAllItems() {
     this.loading.set(true);
     try {
-      const items = await this.http.get<Item[]>(`${this.apiUrl}/items`).toPromise();
+      const items = await firstValueFrom(this.http.get<Item[]>(`${this.apiUrl}/items`));
       this.loading.set(false);
       return items || [];
     } catch (error) {
@@ -53,10 +54,10 @@ export class ItemsService {
     }
   }
 
-  async getMyItems(): Promise<Item[]> {
+  async getMyItems() {
     this.loading.set(true);
     try {
-      const items = await this.http.get<Item[]>(`${this.apiUrl}/items/my-items`).toPromise();
+      const items = await firstValueFrom(this.http.get<Item[]>(`${this.apiUrl}/items/my-items`));
       this.loading.set(false);
       return items || [];
     } catch (error) {
@@ -65,22 +66,22 @@ export class ItemsService {
     }
   }
 
-  async createItem(item: CreateItemDto): Promise<Item> {
-    return await this.http.post<Item>(`${this.apiUrl}/items`, item).toPromise() as Item;
+  async createItem(item: CreateItemDto) {
+    return await firstValueFrom(this.http.post<Item>(`${this.apiUrl}/items`, item));
   }
 
-  async updateItem(id: string, item: Partial<CreateItemDto>): Promise<Item> {
-    return await this.http.put<Item>(`${this.apiUrl}/items/${id}`, item).toPromise() as Item;
+  async updateItem(id: string, item: Partial<CreateItemDto>) {
+    return await firstValueFrom(this.http.put<Item>(`${this.apiUrl}/items/${id}`, item));
   }
 
-  async deleteItem(id: string): Promise<{message: string}> {
-    return await this.http.delete<{message: string}>(`${this.apiUrl}/items/${id}`).toPromise() as {message: string};
+  async deleteItem(id: string) {
+    return await firstValueFrom(this.http.delete<{message: string}>(`${this.apiUrl}/items/${id}`));
   }
 
-  async searchItems(query: string): Promise<Item[]> {
+  async searchItems(query: string) {
     this.loading.set(true);
     try {
-      const items = await this.http.get<Item[]>(`${this.apiUrl}/items?search=${encodeURIComponent(query)}`).toPromise();
+      const items = await firstValueFrom(this.http.get<Item[]>(`${this.apiUrl}/items?search=${encodeURIComponent(query)}`));
       this.loading.set(false);
       return items || [];
     } catch (error) {
@@ -89,7 +90,6 @@ export class ItemsService {
     }
   }
 
-  // Observable methods for reactive programming
   loadItems(): Observable<Item[]> {
     this.loading.set(true);
     return this.http.get<Item[]>(`${this.apiUrl}/items`);
