@@ -1,4 +1,8 @@
-# Railway Deployment Configuration
-
-# Build settings
-nixpacks.config.json
+# Development files only
+node_modules/
+src/
+.git/
+.github/
+.vscode/
+*.md
+package-lock.json
