@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -32,7 +32,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   loginData: LoginRequest = {
     email: '',
     password: ''
@@ -46,6 +46,18 @@ export class LoginComponent {
     private router: Router,
     private snackbar: SnackbarService
   ) {}
+
+  async ngOnInit(): Promise<void> {
+    // Wait for auth service initialization
+    while (!this.authService.isInitialized()) {
+      await new Promise(resolve => setTimeout(resolve, 50));
+    }
+
+    // If user is already authenticated, redirect to dashboard
+    if (this.authService.isAuthenticated()) {
+      this.router.navigate(['/dashboard']);
+    }
+  }
 
   onSubmit(): void {
     if (this.loading()) return;

@@ -1,6 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { Observable, tap, map, of, catchError, firstValueFrom } from 'rxjs';
 import { AuthResponse, User, LoginRequest, RegisterRequest } from './auth.models';
 import { environment } from '../../environments/environment';
 
@@ -13,9 +13,30 @@ export class AuthService {
 
   currentUser = signal<User | null>(null);
   isAuthenticated = signal<boolean>(false);
+  private initializationComplete = signal<boolean>(false);
 
   constructor(private http: HttpClient) {
-    this.checkAuthStatus();
+    this.initializeAuth();
+  }
+
+  private async initializeAuth() {
+    const token = localStorage.getItem(this.tokenKey);
+    
+    if (token) {
+      try {
+        const user = await firstValueFrom(this.getProfile());
+        this.currentUser.set(user);
+        this.isAuthenticated.set(true);
+      } catch (error) {
+        console.error('Token invalide, déconnexion:', error);
+        this.logout();
+      }
+    }
+    this.initializationComplete.set(true);
+  }
+
+  isInitialized(): boolean {
+    return this.initializationComplete();
   }
 
   register(userData: RegisterRequest) {
@@ -38,32 +59,17 @@ export class AuthService {
     this.isAuthenticated.set(false);
   }
 
-  getProfile(){
-    return this.http.get(`${this.apiUrl}/profile`);
+  getProfile(): Observable<User> {
+    return this.http.get<{message: string, user: User}>(`${this.apiUrl}/profile`)
+      .pipe(
+        map(response => response.user)
+      );
   }
 
   private handleAuthSuccess(response: AuthResponse) {
     localStorage.setItem(this.tokenKey, response.token);
     this.currentUser.set(response.user);
     this.isAuthenticated.set(true);
-  }
-
-  private checkAuthStatus() {
-    const token = localStorage.getItem(this.tokenKey);
-    if (token) {
-      this.isAuthenticated.set(true);
-      // Récupérer les informations du profil utilisateur
-      this.getProfile().subscribe({
-        next: (user: any) => {
-          this.currentUser.set(user);
-        },
-        error: (error) => {
-          console.error('Erreur lors de la récupération du profil:', error);
-          // En cas d'erreur, supprimer le token invalide
-          this.logout();
-        }
-      });
-    }
   }
 
   getToken() {

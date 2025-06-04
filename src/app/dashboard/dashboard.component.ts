@@ -80,6 +80,16 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // Wait for auth service initialization
+    this.waitForAuthInitialization();
+  }
+
+  private async waitForAuthInitialization(): Promise<void> {
+    // Wait until auth service is initialized
+    while (!this.authService.isInitialized()) {
+      await new Promise(resolve => setTimeout(resolve, 50));
+    }
+
     // If user is not authenticated, redirect to login
     if (!this.authService.isAuthenticated()) {
       this.router.navigate(['/login']);
