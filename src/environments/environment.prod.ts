@@ -2,7 +2,7 @@ import { Environment } from './environment.interface';
 
 export const environment: Environment = {
   production: true,
-  apiUrl: 'https://bartering-platform-backend-production.up.railway.app/',
+  apiUrl: 'https://bartering-platform-backend-production.up.railway.app',
   appName: 'Bartering App',
   version: '1.0.0',
   enableLogging: false,
