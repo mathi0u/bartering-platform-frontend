@@ -1,0 +1,202 @@
+<mat-toolbar color="primary" class="dashboard-toolbar">
+  <span class="toolbar-title">
+    <mat-icon>dashboard</mat-icon>
+    Bartering App
+  </span>
+  <span class="spacer"></span>
+  <button mat-raised-button color="accent" (click)="logout()">
+    <mat-icon>logout</mat-icon>
+    Logout
+  </button>
+</mat-toolbar>
+
+<div class="dashboard-container">
+  <mat-tab-group class="dashboard-tabs">
+
+    <!-- Browse Items Tab -->
+    <mat-tab label="Browse Items">
+      <div class="tab-content">
+        <div class="search-bar">
+          <mat-form-field appearance="outline" class="search-field">
+            <mat-label>Search items</mat-label>
+            <input matInput [(ngModel)]="searchQuery" (keyup.enter)="searchItems()" placeholder="Enter keywords...">
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+          <button mat-raised-button color="primary" (click)="searchItems()">Search</button>
+          <button mat-button (click)="loadAllItems()">Show All</button>
+        </div>
+
+        <div class="items-grid">
+          @for (item of availableItems(); track item.id) {
+            <mat-card class="item-card">
+              <mat-card-header>
+                <mat-card-title>{{ item.title }}</mat-card-title>
+                <mat-card-subtitle>{{ item.category }} - {{ item.condition }}</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <p>{{ item.description }}</p>
+                <p class="owner-info">Owner: {{ item.owner.name }}</p>
+              </mat-card-content>
+              <mat-card-actions>
+                @if (item.ownerId !== currentUserId()) {
+                  <button mat-raised-button color="primary" (click)="openBarterDialog(item)">
+                    Make Offer
+                  </button>
+                }
+              </mat-card-actions>
+            </mat-card>
+          } @empty {
+            <div class="empty-state">
+              <mat-icon>inbox</mat-icon>
+              <p>No items available for trading</p>
+            </div>
+          }
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- My Items Tab -->
+    <mat-tab label="My Items">
+      <div class="tab-content">
+        <div class="add-item-section">
+          <button mat-raised-button color="primary" (click)="showAddItemForm = !showAddItemForm">
+            <mat-icon>add</mat-icon>
+            Add New Item
+          </button>
+        </div>
+
+        @if (showAddItemForm) {
+          <mat-card class="add-item-card">
+            <mat-card-header>
+              <mat-card-title>Add New Item</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="form-grid">
+                <mat-form-field appearance="outline">
+                  <mat-label>Title</mat-label>
+                  <input matInput [(ngModel)]="newItem.title" required>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>Category</mat-label>
+                  <input matInput [(ngModel)]="newItem.category" required>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>Condition</mat-label>
+                  <mat-select [(ngModel)]="newItem.condition" required>
+                    <mat-option value="new">New</mat-option>
+                    <mat-option value="like-new">Like New</mat-option>
+                    <mat-option value="good">Good</mat-option>
+                    <mat-option value="fair">Fair</mat-option>
+                    <mat-option value="poor">Poor</mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Description</mat-label>
+                  <textarea matInput [(ngModel)]="newItem.description" rows="3" required></textarea>
+                </mat-form-field>
+              </div>
+            </mat-card-content>
+            <mat-card-actions>
+              <button mat-raised-button color="primary" (click)="addItem()" [disabled]="!isNewItemValid()">
+                Add Item
+              </button>
+              <button mat-button (click)="cancelAddItem()">Cancel</button>
+            </mat-card-actions>
+          </mat-card>
+        }
+
+        <div class="items-grid">
+          @for (item of myItems(); track item.id) {
+            <mat-card class="item-card">
+              <mat-card-header>
+                <mat-card-title>{{ item.title }}</mat-card-title>
+                <mat-card-subtitle>{{ item.category }} - {{ item.condition }}</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <p>{{ item.description }}</p>
+                <p class="status" [class.available]="item.isAvailable" [class.unavailable]="!item.isAvailable">
+                  {{ item.isAvailable ? 'Available' : 'Not Available' }}
+                </p>
+              </mat-card-content>
+              <mat-card-actions>
+                <button mat-button color="warn" (click)="deleteItem(item.id)">
+                  <mat-icon>delete</mat-icon>
+                  Delete
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          } @empty {
+            <div class="empty-state">
+              <mat-icon>inventory</mat-icon>
+              <p>You haven't added any items yet</p>
+            </div>
+          }
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Barter Requests Tab -->
+    <mat-tab label="Barter Requests">
+      <div class="tab-content">
+        <mat-tab-group>
+          <mat-tab label="Received">
+            <div class="requests-list">
+              @for (request of receivedRequests(); track request.id) {
+                <mat-card class="request-card">
+                  <mat-card-header>
+                    <mat-card-title>{{ request.requester.name }} wants your {{ request.requestedItem.title }}</mat-card-title>
+                    <mat-card-subtitle>Status: {{ request.status }}</mat-card-subtitle>
+                  </mat-card-header>
+                  <mat-card-content>
+                    <p><strong>Offering:</strong> {{ request.offeredItem.title }}</p>
+                    <p><strong>Message:</strong> {{ request.message }}</p>
+                  </mat-card-content>
+                  @if (request.status === 'pending') {
+                    <mat-card-actions>
+                      <button mat-raised-button color="primary" (click)="updateRequestStatus(request.id, 'accepted')">
+                        Accept
+                      </button>
+                      <button mat-button color="warn" (click)="updateRequestStatus(request.id, 'rejected')">
+                        Reject
+                      </button>
+                    </mat-card-actions>
+                  }
+                </mat-card>
+              } @empty {
+                <div class="empty-state">
+                  <mat-icon>inbox</mat-icon>
+                  <p>No requests received</p>
+                </div>
+              }
+            </div>
+          </mat-tab>
+
+          <mat-tab label="Sent">
+            <div class="requests-list">
+              @for (request of sentRequests(); track request.id) {
+                <mat-card class="request-card">
+                  <mat-card-header>
+                    <mat-card-title>Request for {{ request.requestedItem.title }}</mat-card-title>
+                    <mat-card-subtitle>Status: {{ request.status }}</mat-card-subtitle>
+                  </mat-card-header>
+                  <mat-card-content>
+                    <p><strong>Your offer:</strong> {{ request.offeredItem.title }}</p>
+                    <p><strong>Message:</strong> {{ request.message }}</p>
+                  </mat-card-content>
+                </mat-card>
+              } @empty {
+                <div class="empty-state">
+                  <mat-icon>send</mat-icon>
+                  <p>No requests sent</p>
+                </div>
+              }
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

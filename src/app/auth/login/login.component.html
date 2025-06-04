@@ -1,0 +1,97 @@
+<div class="auth-container">
+  <mat-card class="auth-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>login</mat-icon>
+        Login
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+          <input
+            matInput
+            type="email"
+            name="email"
+            [(ngModel)]="loginData.email"
+            required
+            email
+            #email="ngModel"
+            placeholder="Enter your email"
+          />
+          <mat-icon matSuffix>email</mat-icon>
+          @if (email.invalid && email.touched) {
+            <mat-error>
+              @if (email.errors?.['required']) {
+                Email is required
+              }
+              @if (email.errors?.['email']) {
+                Please enter a valid email
+              }
+            </mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Password</mat-label>
+          <input
+            matInput
+            type="password"
+            name="password"
+            [(ngModel)]="loginData.password"
+            required
+            #password="ngModel"
+            placeholder="Enter your password"
+          />
+          <mat-icon matSuffix>lock</mat-icon>
+          @if (password.invalid && password.touched) {
+            <mat-error>
+              @if (password.errors?.['required']) {
+                Password is required
+              }
+            </mat-error>
+          }
+        </mat-form-field>
+
+        @if (loading()) {
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            disabled
+            class="full-width login-button"
+          >
+            <mat-spinner diameter="20"></mat-spinner>
+            Logging in...
+          </button>
+        } @else {
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="loginForm.invalid"
+            class="full-width login-button"
+          >
+            Login
+          </button>
+        }
+      </form>
+
+      @if (error()) {
+        <mat-card class="error-card">
+          <mat-icon color="warn">error</mat-icon>
+          {{ error() }}
+        </mat-card>
+      }
+    </mat-card-content>
+
+    <mat-card-actions>
+      <p class="auth-link">
+        Don't have an account?
+        <a routerLink="/register" mat-button color="accent">Register here</a>
+      </p>
+    </mat-card-actions>
+  </mat-card>
+</div>
