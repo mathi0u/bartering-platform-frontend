@@ -12,7 +12,7 @@ export class SnackbarService {
     this.snackBar.openFromComponent(CustomSnackbarComponent, {
       data,
       duration,
-      horizontalPosition: 'center',
+      horizontalPosition: 'right',
       verticalPosition: 'top',
       panelClass: ['custom-snackbar-container']
     });

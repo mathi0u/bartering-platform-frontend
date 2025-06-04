@@ -17,6 +17,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-dashboard',
@@ -33,7 +34,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatInputModule,
     MatSelectModule,
     MatDialogModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatSlideToggleModule
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
@@ -48,6 +50,7 @@ export class DashboardComponent implements OnInit {
 
   // Form states
   showAddItemForm = false;
+  editingItem: Item | null = null;
   searchQuery = '';
   newItem: CreateItemDto = {
     title: '',
@@ -55,6 +58,13 @@ export class DashboardComponent implements OnInit {
     category: '',
     condition: 'good'
   };
+  editItem: CreateItemDto = {
+    title: '',
+    description: '',
+    category: '',
+    condition: 'good'
+  };
+  editItemAvailable = true;
 
   constructor(
     public authService: AuthService,
@@ -145,6 +155,59 @@ export class DashboardComponent implements OnInit {
       console.error('Error deleting item:', error);
       this.snackbar.error('Erreur lors de la suppression de l\'article');
     }
+  }
+
+  startEditItem(item: Item): void {
+    this.editingItem = item;
+    this.editItem = {
+      title: item.title,
+      description: item.description,
+      category: item.category,
+      condition: item.condition,
+      imageUrl: item.imageUrl
+    };
+    this.editItemAvailable = item.isAvailable;
+  }
+
+  async updateItem(): Promise<void> {
+    if (!this.editingItem || !this.isEditItemValid()) return;
+
+    try {
+      const updateData = {
+        ...this.editItem,
+        isAvailable: this.editItemAvailable
+      };
+      await this.itemsService.updateItem(this.editingItem.id, updateData);
+      this.cancelEditItem();
+      await this.loadMyItems();
+      await this.loadAllItems();
+      this.snackbar.success('Article modifié avec succès !');
+    } catch (error) {
+      console.error('Error updating item:', error);
+      this.snackbar.error('Erreur lors de la modification de l\'article');
+    }
+  }
+
+  cancelEditItem(): void {
+    this.editingItem = null;
+    this.editItemAvailable = true;
+    this.resetEditItemForm();
+  }
+
+  private resetEditItemForm(): void {
+    this.editItem = {
+      title: '',
+      description: '',
+      category: '',
+      condition: 'good'
+    };
+  }
+
+  isEditItemValid(): boolean {
+    return !!(this.editItem.title &&
+              this.editItem.description &&
+              this.editItem.category &&
+              this.editItem.condition);
   }
 
   isNewItemValid(): boolean {

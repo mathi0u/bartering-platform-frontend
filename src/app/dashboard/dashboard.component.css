@@ -253,6 +253,12 @@
   grid-column: 1 / -1;
 }
 
+.availability-toggle {
+  display: flex;
+  align-items: center;
+  padding: 16px 0;
+}
+
 /* Requests styles */
 .requests-list {
   display: flex;

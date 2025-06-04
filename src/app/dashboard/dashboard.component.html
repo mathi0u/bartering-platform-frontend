@@ -93,6 +93,11 @@
                   </mat-select>
                 </mat-form-field>
 
+                <mat-form-field appearance="outline">
+                  <mat-label>URL de l'image (optionnel)</mat-label>
+                  <input matInput [(ngModel)]="newItem.imageUrl" placeholder="https://...">
+                </mat-form-field>
+
                 <mat-form-field appearance="outline" class="full-width">
                   <mat-label>Description</mat-label>
                   <textarea matInput [(ngModel)]="newItem.description" rows="3" required></textarea>
@@ -111,22 +116,84 @@
         <div class="items-grid">
           @for (item of myItems(); track item.id) {
             <mat-card class="item-card">
-              <mat-card-header>
-                <mat-card-title>{{ item.title }}</mat-card-title>
-                <mat-card-subtitle>{{ item.category }} - {{ item.condition }}</mat-card-subtitle>
-              </mat-card-header>
-              <mat-card-content>
-                <p>{{ item.description }}</p>
-                <p class="status" [class.available]="item.isAvailable" [class.unavailable]="!item.isAvailable">
-                  {{ item.isAvailable ? 'Disponible' : 'Non disponible' }}
-                </p>
-              </mat-card-content>
-              <mat-card-actions>
-                <button mat-button color="warn" (click)="deleteItem(item.id)">
-                  <mat-icon>delete</mat-icon>
-                  Supprimer
-                </button>
-              </mat-card-actions>
+              @if (editingItem?.id === item.id) {
+                <!-- Edit Form -->
+                <mat-card-header>
+                  <mat-card-title>Modifier l'article</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  <div class="form-grid">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Titre</mat-label>
+                      <input matInput [(ngModel)]="editItem.title" required>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                      <mat-label>Catégorie</mat-label>
+                      <input matInput [(ngModel)]="editItem.category" required>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                      <mat-label>État</mat-label>
+                      <mat-select [(ngModel)]="editItem.condition" required>
+                        <mat-option value="new">Neuf</mat-option>
+                        <mat-option value="like-new">Comme neuf</mat-option>
+                        <mat-option value="good">Bon</mat-option>
+                        <mat-option value="fair">Correct</mat-option>
+                        <mat-option value="poor">Mauvais</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                      <mat-label>URL de l'image (optionnel)</mat-label>
+                      <input matInput [(ngModel)]="editItem.imageUrl" placeholder="https://...">
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="full-width">
+                      <mat-label>Description</mat-label>
+                      <textarea matInput [(ngModel)]="editItem.description" rows="3" required></textarea>
+                    </mat-form-field>
+
+                    <div class="availability-toggle full-width">
+                      <mat-slide-toggle [(ngModel)]="editItemAvailable" color="primary">
+                        Article disponible pour l'échange
+                      </mat-slide-toggle>
+                    </div>
+                  </div>
+                </mat-card-content>
+                <mat-card-actions>
+                  <button mat-raised-button color="primary" (click)="updateItem()" [disabled]="!isEditItemValid()">
+                    <mat-icon>save</mat-icon>
+                    Sauvegarder
+                  </button>
+                  <button mat-button (click)="cancelEditItem()">
+                    <mat-icon>cancel</mat-icon>
+                    Annuler
+                  </button>
+                </mat-card-actions>
+              } @else {
+                <!-- Display Mode -->
+                <mat-card-header>
+                  <mat-card-title>{{ item.title }}</mat-card-title>
+                  <mat-card-subtitle>{{ item.category }} - {{ item.condition }}</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                  <p>{{ item.description }}</p>
+                  <p class="status" [class.available]="item.isAvailable" [class.unavailable]="!item.isAvailable">
+                    {{ item.isAvailable ? 'Disponible' : 'Non disponible' }}
+                  </p>
+                </mat-card-content>
+                <mat-card-actions>
+                  <button mat-button color="primary" (click)="startEditItem(item)">
+                    <mat-icon>edit</mat-icon>
+                    Modifier
+                  </button>
+                  <button mat-button color="warn" (click)="deleteItem(item.id)">
+                    <mat-icon>delete</mat-icon>
+                    Supprimer
+                  </button>
+                </mat-card-actions>
+              }
             </mat-card>
           } @empty {
             <div class="empty-state">
