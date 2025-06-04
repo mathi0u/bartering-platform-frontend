@@ -1,0 +1,25 @@
+# Test Caddyfile for local development
+:3000 {
+	# Enable gzip compression
+	encode gzip
+
+	# Root directory for the built Angular app
+	root * ./dist/frontend-app/browser
+
+	# Try files in order, fallback to index.html for SPA routing
+	try_files {path} /index.html
+
+	# Serve files
+	file_server
+
+	# Health check endpoint
+	respond /health 200 {
+		body "OK"
+	}
+
+	# Log access
+	log {
+		output stdout
+		format console
+	}
+}
