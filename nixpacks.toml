@@ -1,6 +1,0 @@
-{
-  "providers": ["node"],
-  "buildCommand": "npm run build:prod && curl -sSL https://github.com/caddyserver/caddy/releases/download/v2.7.6/caddy_2.7.6_linux_amd64.tar.gz | tar -xz caddy",
-  "startCommand": "./caddy run --config Caddyfile --adapter caddyfile",
-  "staticOutputDir": "dist/frontend-app/browser"
-}
