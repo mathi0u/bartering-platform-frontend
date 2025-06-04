@@ -46,7 +46,6 @@ export class BarterService {
 
   constructor(private http: HttpClient) {}
 
-  // Async methods for easier use in components
   async createBarterRequest(request: CreateBarterRequestDto) {
     return await firstValueFrom(this.http.post<BarterRequest>(`${this.apiUrl}/barter`, request));
   }

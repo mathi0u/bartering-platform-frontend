@@ -11,7 +11,6 @@ export class AuthService {
   private apiUrl = `${environment.apiUrl}/auth`;
   private tokenKey = 'auth_token';
 
-  // Using Angular signals for reactive state management
   currentUser = signal<User | null>(null);
   isAuthenticated = signal<boolean>(false);
 
@@ -19,45 +18,44 @@ export class AuthService {
     this.checkAuthStatus();
   }
 
-  register(userData: RegisterRequest): Observable<AuthResponse> {
+  register(userData: RegisterRequest) {
     return this.http.post<AuthResponse>(`${this.apiUrl}/register`, userData)
       .pipe(
         tap(response => this.handleAuthSuccess(response))
       );
   }
 
-  login(credentials: LoginRequest): Observable<AuthResponse> {
+  login(credentials: LoginRequest) {
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials)
       .pipe(
         tap(response => this.handleAuthSuccess(response))
       );
   }
 
-  logout(): void {
+  logout() {
     localStorage.removeItem(this.tokenKey);
     this.currentUser.set(null);
     this.isAuthenticated.set(false);
   }
 
-  getProfile(): Observable<any> {
+  getProfile(){
     return this.http.get(`${this.apiUrl}/profile`);
   }
 
-  private handleAuthSuccess(response: AuthResponse): void {
+  private handleAuthSuccess(response: AuthResponse) {
     localStorage.setItem(this.tokenKey, response.token);
     this.currentUser.set(response.user);
     this.isAuthenticated.set(true);
   }
 
-  private checkAuthStatus(): void {
+  private checkAuthStatus() {
     const token = localStorage.getItem(this.tokenKey);
     if (token) {
-      // In a real app, you might want to validate the token with the server
       this.isAuthenticated.set(true);
     }
   }
 
-  getToken(): string | null {
+  getToken() {
     return localStorage.getItem(this.tokenKey);
   }
 }

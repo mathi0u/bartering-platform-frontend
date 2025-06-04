@@ -41,7 +41,6 @@ export class ItemsService {
 
   constructor(private http: HttpClient) {}
 
-  // Async methods for easier use in components
   async getAllItems() {
     this.loading.set(true);
     try {

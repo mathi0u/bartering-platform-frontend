@@ -1,83 +1,82 @@
-import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
-import { Environment } from '../../environments/environment.interface';
+import { Injectable } from "@angular/core";
+import { environment } from "../../environments/environment";
+import { Environment } from "../../environments/environment.interface";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class ConfigService {
   private config: Environment = environment;
 
-  get apiUrl(): string {
+  get apiUrl() {
     return this.config.apiUrl;
   }
 
-  get appName(): string {
+  get appName() {
     return this.config.appName;
   }
 
-  get version(): string {
+  get version() {
     return this.config.version;
   }
 
-  get isProduction(): boolean {
+  get isProduction() {
     return this.config.production;
   }
 
-  get enableLogging(): boolean {
+  get enableLogging() {
     return this.config.enableLogging;
   }
 
-  get enableDevTools(): boolean {
+  get enableDevTools() {
     return this.config.enableDevTools;
   }
 
-  get maxFileSize(): number {
+  get maxFileSize() {
     return this.config.maxFileSize;
   }
 
-  get supportedImageTypes(): string[] {
+  get supportedImageTypes() {
     return this.config.supportedImageTypes;
   }
 
-  get defaultPageSize(): number {
+  get defaultPageSize() {
     return this.config.defaultPageSize;
   }
 
-  get maxItemsPerUser(): number {
+  get maxItemsPerUser() {
     return this.config.maxItemsPerUser;
   }
 
-  get sessionTimeout(): number {
+  get sessionTimeout() {
     return this.config.sessionTimeout;
   }
 
-  // Utility methods
-  isImageTypeSupported(type: string): boolean {
+  isImageTypeSupported(type: string) {
     return this.supportedImageTypes.includes(type);
   }
 
-  formatFileSize(bytes: number): string {
-    if (bytes === 0) return '0 Bytes';
+  formatFileSize(bytes: number) {
+    if (bytes === 0) return "0 Bytes";
     const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const sizes = ["Bytes", "KB", "MB", "GB"];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
   }
 
-  log(message: any, ...optionalParams: any[]): void {
+  log(message: string, ...optionalParams: unknown[]) {
     if (this.enableLogging) {
       console.log(`[${this.appName}]`, message, ...optionalParams);
     }
   }
 
-  error(message: any, ...optionalParams: any[]): void {
+  error(message: string, ...optionalParams: unknown[]) {
     if (this.enableLogging) {
       console.error(`[${this.appName}]`, message, ...optionalParams);
     }
   }
 
-  warn(message: any, ...optionalParams: any[]): void {
+  warn(message: string, ...optionalParams: unknown[]) {
     if (this.enableLogging) {
       console.warn(`[${this.appName}]`, message, ...optionalParams);
     }

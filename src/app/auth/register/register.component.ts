@@ -5,7 +5,6 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { RegisterRequest } from '../auth.models';
 
-// Angular Material imports
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -219,7 +218,6 @@ import { MatIconModule } from '@angular/material/icon';
       padding-top: 0;
     }
 
-    /* Responsive design for small screens */
     @media (max-height: 700px) {
       .auth-container {
         align-items: flex-start;

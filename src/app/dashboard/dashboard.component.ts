@@ -6,7 +6,6 @@ import { ItemsService, Item, CreateItemDto } from '../items/items.service';
 import { BarterService, BarterRequest } from '../barter/barter.service';
 import { FormsModule } from '@angular/forms';
 
-// Angular Material imports
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
