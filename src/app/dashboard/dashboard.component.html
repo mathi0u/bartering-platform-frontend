@@ -1,12 +1,12 @@
 <mat-toolbar color="primary" class="dashboard-toolbar">
   <span class="toolbar-title">
     <mat-icon>dashboard</mat-icon>
-    Bartering App
+        DIOKALANTE
   </span>
   <span class="spacer"></span>
   <button mat-raised-button color="accent" (click)="logout()">
     <mat-icon>logout</mat-icon>
-    Logout
+    Déconnexion
   </button>
 </mat-toolbar>
 
@@ -14,16 +14,16 @@
   <mat-tab-group class="dashboard-tabs">
 
     <!-- Browse Items Tab -->
-    <mat-tab label="Browse Items">
+    <mat-tab label="Parcourir les articles">
       <div class="tab-content">
         <div class="search-bar">
           <mat-form-field appearance="outline" class="search-field">
-            <mat-label>Search items</mat-label>
-            <input matInput [(ngModel)]="searchQuery" (keyup.enter)="searchItems()" placeholder="Enter keywords...">
+            <mat-label>Rechercher des articles</mat-label>
+            <input matInput [(ngModel)]="searchQuery" (keyup.enter)="searchItems()" placeholder="Entrez des mots-clés...">
             <mat-icon matSuffix>search</mat-icon>
           </mat-form-field>
-          <button mat-raised-button color="primary" (click)="searchItems()">Search</button>
-          <button mat-button (click)="loadAllItems()">Show All</button>
+          <button mat-raised-button color="primary" (click)="searchItems()">Rechercher</button>
+          <button mat-button (click)="loadAllItems()">Tout afficher</button>
         </div>
 
         <div class="items-grid">
@@ -35,12 +35,12 @@
               </mat-card-header>
               <mat-card-content>
                 <p>{{ item.description }}</p>
-                <p class="owner-info">Owner: {{ item.owner.name }}</p>
+                <p class="owner-info">Propriétaire : {{ item.owner.name }}</p>
               </mat-card-content>
               <mat-card-actions>
                 @if (item.ownerId !== currentUserId()) {
                   <button mat-raised-button color="primary" (click)="openBarterDialog(item)">
-                    Make Offer
+                    Faire une offre
                   </button>
                 }
               </mat-card-actions>
@@ -48,7 +48,7 @@
           } @empty {
             <div class="empty-state">
               <mat-icon>inbox</mat-icon>
-              <p>No items available for trading</p>
+              <p>Aucun article disponible pour l'échange</p>
             </div>
           }
         </div>
@@ -56,40 +56,40 @@
     </mat-tab>
 
     <!-- My Items Tab -->
-    <mat-tab label="My Items">
+    <mat-tab label="Mes articles">
       <div class="tab-content">
         <div class="add-item-section">
           <button mat-raised-button color="primary" (click)="showAddItemForm = !showAddItemForm">
             <mat-icon>add</mat-icon>
-            Add New Item
+            Ajouter un nouvel article
           </button>
         </div>
 
         @if (showAddItemForm) {
           <mat-card class="add-item-card">
             <mat-card-header>
-              <mat-card-title>Add New Item</mat-card-title>
+              <mat-card-title>Ajouter un nouvel article</mat-card-title>
             </mat-card-header>
             <mat-card-content>
               <div class="form-grid">
                 <mat-form-field appearance="outline">
-                  <mat-label>Title</mat-label>
+                  <mat-label>Titre</mat-label>
                   <input matInput [(ngModel)]="newItem.title" required>
                 </mat-form-field>
 
                 <mat-form-field appearance="outline">
-                  <mat-label>Category</mat-label>
+                  <mat-label>Catégorie</mat-label>
                   <input matInput [(ngModel)]="newItem.category" required>
                 </mat-form-field>
 
                 <mat-form-field appearance="outline">
-                  <mat-label>Condition</mat-label>
+                  <mat-label>État</mat-label>
                   <mat-select [(ngModel)]="newItem.condition" required>
-                    <mat-option value="new">New</mat-option>
-                    <mat-option value="like-new">Like New</mat-option>
-                    <mat-option value="good">Good</mat-option>
-                    <mat-option value="fair">Fair</mat-option>
-                    <mat-option value="poor">Poor</mat-option>
+                    <mat-option value="new">Neuf</mat-option>
+                    <mat-option value="like-new">Comme neuf</mat-option>
+                    <mat-option value="good">Bon</mat-option>
+                    <mat-option value="fair">Correct</mat-option>
+                    <mat-option value="poor">Mauvais</mat-option>
                   </mat-select>
                 </mat-form-field>
 
@@ -101,9 +101,9 @@
             </mat-card-content>
             <mat-card-actions>
               <button mat-raised-button color="primary" (click)="addItem()" [disabled]="!isNewItemValid()">
-                Add Item
+                Ajouter l'article
               </button>
-              <button mat-button (click)="cancelAddItem()">Cancel</button>
+              <button mat-button (click)="cancelAddItem()">Annuler</button>
             </mat-card-actions>
           </mat-card>
         }
@@ -118,20 +118,20 @@
               <mat-card-content>
                 <p>{{ item.description }}</p>
                 <p class="status" [class.available]="item.isAvailable" [class.unavailable]="!item.isAvailable">
-                  {{ item.isAvailable ? 'Available' : 'Not Available' }}
+                  {{ item.isAvailable ? 'Disponible' : 'Non disponible' }}
                 </p>
               </mat-card-content>
               <mat-card-actions>
                 <button mat-button color="warn" (click)="deleteItem(item.id)">
                   <mat-icon>delete</mat-icon>
-                  Delete
+                  Supprimer
                 </button>
               </mat-card-actions>
             </mat-card>
           } @empty {
             <div class="empty-state">
               <mat-icon>inventory</mat-icon>
-              <p>You haven't added any items yet</p>
+              <p>Vous n'avez encore ajouté aucun article</p>
             </div>
           }
         </div>
@@ -139,28 +139,28 @@
     </mat-tab>
 
     <!-- Barter Requests Tab -->
-    <mat-tab label="Barter Requests">
+    <mat-tab label="Demandes d'échange">
       <div class="tab-content">
         <mat-tab-group>
-          <mat-tab label="Received">
+          <mat-tab label="Reçues">
             <div class="requests-list">
               @for (request of receivedRequests(); track request.id) {
                 <mat-card class="request-card">
                   <mat-card-header>
-                    <mat-card-title>{{ request.requester.name }} wants your {{ request.requestedItem.title }}</mat-card-title>
-                    <mat-card-subtitle>Status: {{ request.status }}</mat-card-subtitle>
+                    <mat-card-title>{{ request.requester.name }} veut votre {{ request.requestedItem.title }}</mat-card-title>
+                    <mat-card-subtitle>Statut : {{ request.status }}</mat-card-subtitle>
                   </mat-card-header>
                   <mat-card-content>
-                    <p><strong>Offering:</strong> {{ request.offeredItem.title }}</p>
-                    <p><strong>Message:</strong> {{ request.message }}</p>
+                    <p><strong>Propose :</strong> {{ request.offeredItem.title }}</p>
+                    <p><strong>Message :</strong> {{ request.message }}</p>
                   </mat-card-content>
                   @if (request.status === 'pending') {
                     <mat-card-actions>
                       <button mat-raised-button color="primary" (click)="updateRequestStatus(request.id, 'accepted')">
-                        Accept
+                        Accepter
                       </button>
                       <button mat-button color="warn" (click)="updateRequestStatus(request.id, 'rejected')">
-                        Reject
+                        Rejeter
                       </button>
                     </mat-card-actions>
                   }
@@ -168,29 +168,29 @@
               } @empty {
                 <div class="empty-state">
                   <mat-icon>inbox</mat-icon>
-                  <p>No requests received</p>
+                  <p>Aucune demande reçue</p>
                 </div>
               }
             </div>
           </mat-tab>
 
-          <mat-tab label="Sent">
+          <mat-tab label="Envoyées">
             <div class="requests-list">
               @for (request of sentRequests(); track request.id) {
                 <mat-card class="request-card">
                   <mat-card-header>
-                    <mat-card-title>Request for {{ request.requestedItem.title }}</mat-card-title>
-                    <mat-card-subtitle>Status: {{ request.status }}</mat-card-subtitle>
+                    <mat-card-title>Demande pour {{ request.requestedItem.title }}</mat-card-title>
+                    <mat-card-subtitle>Statut : {{ request.status }}</mat-card-subtitle>
                   </mat-card-header>
                   <mat-card-content>
-                    <p><strong>Your offer:</strong> {{ request.offeredItem.title }}</p>
-                    <p><strong>Message:</strong> {{ request.message }}</p>
+                    <p><strong>Votre offre :</strong> {{ request.offeredItem.title }}</p>
+                    <p><strong>Message :</strong> {{ request.message }}</p>
                   </mat-card-content>
                 </mat-card>
               } @empty {
                 <div class="empty-state">
                   <mat-icon>send</mat-icon>
-                  <p>No requests sent</p>
+                  <p>Aucune demande envoyée</p>
                 </div>
               }
             </div>

@@ -3,14 +3,14 @@
     <mat-card-header>
       <mat-card-title>
         <mat-icon>login</mat-icon>
-        Login
+        Connexion
       </mat-card-title>
     </mat-card-header>
 
     <mat-card-content>
       <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Email</mat-label>
+          <mat-label>E-mail</mat-label>
           <input
             matInput
             type="email"
@@ -19,23 +19,23 @@
             required
             email
             #email="ngModel"
-            placeholder="Enter your email"
+            placeholder="Entrez votre e-mail"
           />
           <mat-icon matSuffix>email</mat-icon>
           @if (email.invalid && email.touched) {
             <mat-error>
               @if (email.errors?.['required']) {
-                Email is required
+                L'e-mail est requis
               }
               @if (email.errors?.['email']) {
-                Please enter a valid email
+                Veuillez entrer un e-mail valide
               }
             </mat-error>
           }
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Password</mat-label>
+          <mat-label>Mot de passe</mat-label>
           <input
             matInput
             type="password"
@@ -43,13 +43,13 @@
             [(ngModel)]="loginData.password"
             required
             #password="ngModel"
-            placeholder="Enter your password"
+            placeholder="Entrez votre mot de passe"
           />
           <mat-icon matSuffix>lock</mat-icon>
           @if (password.invalid && password.touched) {
             <mat-error>
               @if (password.errors?.['required']) {
-                Password is required
+                Le mot de passe est requis
               }
             </mat-error>
           }
@@ -64,7 +64,7 @@
             class="full-width login-button"
           >
             <mat-spinner diameter="20"></mat-spinner>
-            Logging in...
+            Connexion en cours...
           </button>
         } @else {
           <button
@@ -74,7 +74,7 @@
             [disabled]="loginForm.invalid"
             class="full-width login-button"
           >
-            Login
+            Se connecter
           </button>
         }
       </form>
@@ -89,8 +89,8 @@
 
     <mat-card-actions>
       <p class="auth-link">
-        Don't have an account?
-        <a routerLink="/register" mat-button color="accent">Register here</a>
+        Vous n'avez pas de compte ?
+        <a routerLink="/register" mat-button color="accent">Inscrivez-vous ici</a>
       </p>
     </mat-card-actions>
   </mat-card>

@@ -56,7 +56,7 @@ export class LoginComponent {
       },
       error: (error) => {
         console.error('Login error:', error);
-        this.error.set(error.error?.message || 'Login failed. Please try again.');
+        this.error.set(error.error?.message || 'Échec de la connexion. Veuillez réessayer.');
         this.loading.set(false);
       },
       complete: () => {
