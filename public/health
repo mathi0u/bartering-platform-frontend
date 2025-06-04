@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Health Check</title>
+</head>
+<body>
+    <h1>App is healthy</h1>
+    <p>Bartering Frontend is running successfully</p>
+    <script>
+        // Simple health check
+        console.log('Health check passed');
+    </script>
+</body>
+</html>

@@ -1,0 +1,4 @@
+# Railway Deployment Configuration
+
+# Build settings
+nixpacks.config.json

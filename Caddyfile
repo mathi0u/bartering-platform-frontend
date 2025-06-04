@@ -1,0 +1,56 @@
+# Serve the Angular app
+:$PORT {
+	# Enable gzip compression
+	encode gzip
+
+	# Set security headers
+	header {
+		# Security headers
+		X-Content-Type-Options nosniff
+		X-Frame-Options DENY
+		X-XSS-Protection "1; mode=block"
+		Referrer-Policy strict-origin-when-cross-origin
+		
+		# Cache static assets
+		Cache-Control "public, max-age=31536000" {
+			path *.js
+			path *.css
+			path *.png
+			path *.jpg
+			path *.jpeg
+			path *.gif
+			path *.svg
+			path *.ico
+			path *.woff
+			path *.woff2
+		}
+		
+		# Don't cache HTML files
+		Cache-Control "no-cache, no-store, must-revalidate" {
+			path *.html
+		}
+	}
+
+	# Root directory for the built Angular app
+	root * /app/dist/frontend-app/browser
+
+	# Try files in order, fallback to index.html for SPA routing
+	try_files {path} /index.html
+
+	# Serve files
+	file_server
+
+	# Health check endpoint
+	respond /health 200 {
+		body "OK"
+	}
+
+	# API proxy (optional - if you want to proxy API calls)
+	# reverse_proxy /api/* https://main-application-production-e9b0.up.railway.app
+
+	# Log access
+	log {
+		output stdout
+		format console
+	}
+}

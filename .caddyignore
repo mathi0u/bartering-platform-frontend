@@ -1,0 +1,17 @@
+# Caddy ignore file - files to exclude from serving
+node_modules/
+src/
+*.ts
+*.spec.js
+*.map
+.git/
+.github/
+.vscode/
+*.md
+package.json
+package-lock.json
+angular.json
+tsconfig*.json
+Caddyfile
+nixpacks.toml
+railway.json
