@@ -1,5 +1,5 @@
 # Serve the Angular app
-:$PORT {
+:{$PORT} {
 	# Enable gzip compression
 	encode gzip
 
