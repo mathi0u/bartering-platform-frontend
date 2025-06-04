@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { RegisterRequest } from '../auth.models';
+import { SnackbarService } from '../../core/snackbar.service';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -11,6 +12,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-register',
@@ -24,7 +26,8 @@ import { MatIconModule } from '@angular/material/icon';
     MatInputModule,
     MatButtonModule,
     MatProgressSpinnerModule,
-    MatIconModule
+    MatIconModule,
+    MatSnackBarModule
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
@@ -41,7 +44,8 @@ export class RegisterComponent {
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private snackbar: SnackbarService
   ) {}
 
   onSubmit(): void {
@@ -53,11 +57,13 @@ export class RegisterComponent {
     this.authService.register(this.registerData).subscribe({
       next: (response) => {
         console.log('Registration successful:', response);
+        this.snackbar.success('Inscription réussie !');
         this.router.navigate(['/dashboard']);
       },
       error: (error) => {
         console.error('Registration error:', error);
-        this.error.set(error.error?.message || 'Échec de l\'inscription. Veuillez réessayer.');
+        const errorMessage = error.error?.message || 'Échec de l\'inscription. Veuillez réessayer.';
+        this.snackbar.error(errorMessage);
         this.loading.set(false);
       },
       complete: () => {

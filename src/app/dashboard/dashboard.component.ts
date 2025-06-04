@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
 import { ItemsService, Item, CreateItemDto } from '../items/items.service';
 import { BarterService, BarterRequest } from '../barter/barter.service';
+import { SnackbarService } from '../core/snackbar.service';
 import { FormsModule } from '@angular/forms';
 
 import { MatCardModule } from '@angular/material/card';
@@ -15,6 +16,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-dashboard',
@@ -30,7 +32,8 @@ import { MatDialogModule, MatDialog } from '@angular/material/dialog';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    MatDialogModule
+    MatDialogModule,
+    MatSnackBarModule
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
@@ -58,7 +61,8 @@ export class DashboardComponent implements OnInit {
     private router: Router,
     private itemsService: ItemsService,
     private barterService: BarterService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private snackbar: SnackbarService
   ) {}
 
   ngOnInit(): void {
@@ -87,6 +91,7 @@ export class DashboardComponent implements OnInit {
       this.availableItems.set(items);
     } catch (error) {
       console.error('Error loading items:', error);
+      this.snackbar.error('Erreur lors du chargement des articles');
     }
   }
 
@@ -96,6 +101,7 @@ export class DashboardComponent implements OnInit {
       this.myItems.set(items);
     } catch (error) {
       console.error('Error loading my items:', error);
+      this.snackbar.error('Erreur lors du chargement de vos articles');
     }
   }
 
@@ -106,6 +112,7 @@ export class DashboardComponent implements OnInit {
         this.availableItems.set(items);
       } catch (error) {
         console.error('Error searching items:', error);
+        this.snackbar.error('Erreur lors de la recherche');
       }
     } else {
       this.loadAllItems();
@@ -121,8 +128,10 @@ export class DashboardComponent implements OnInit {
       this.showAddItemForm = false;
       await this.loadMyItems();
       await this.loadAllItems(); // Refresh all items as well
+      this.snackbar.success('Article ajouté avec succès !');
     } catch (error) {
       console.error('Error adding item:', error);
+      this.snackbar.error('Erreur lors de l\'ajout de l\'article');
     }
   }
 
@@ -131,8 +140,10 @@ export class DashboardComponent implements OnInit {
       await this.itemsService.deleteItem(itemId);
       await this.loadMyItems();
       await this.loadAllItems(); // Refresh all items as well
+      this.snackbar.success('Article supprimé avec succès !');
     } catch (error) {
       console.error('Error deleting item:', error);
+      this.snackbar.error('Erreur lors de la suppression de l\'article');
     }
   }
 
@@ -167,14 +178,13 @@ export class DashboardComponent implements OnInit {
       this.sentRequests.set(sent);
     } catch (error) {
       console.error('Error loading barter requests:', error);
+      this.snackbar.error('Erreur lors du chargement des demandes d\'échange');
     }
-  }
-
-  openBarterDialog(item: Item): void {
+  }  openBarterDialog(item: Item): void {
     const myAvailableItems = this.myItems().filter(myItem => myItem.isAvailable);
 
     if (myAvailableItems.length === 0) {
-      alert('You need to add some items before making barter offers!');
+      this.snackbar.warning('Vous devez ajouter des articles avant de faire des offres d\'échange !');
       return;
     }
 
@@ -188,7 +198,6 @@ export class DashboardComponent implements OnInit {
       if (itemIndex >= 0 && itemIndex < myAvailableItems.length) {
         const offeredItem = myAvailableItems[itemIndex];
         const message = prompt('Add a message (optional):') || '';
-
         this.createBarterRequest(item.id, offeredItem.id, message);
       }
     }
@@ -203,10 +212,10 @@ export class DashboardComponent implements OnInit {
       });
 
       await this.loadBarterRequests();
-      alert('Barter request sent successfully!');
+      this.snackbar.success('Demande d\'échange envoyée avec succès !');
     } catch (error) {
       console.error('Error creating barter request:', error);
-      alert('Failed to send barter request. Please try again.');
+      this.snackbar.error('Échec de l\'envoi de la demande d\'échange. Veuillez réessayer.');
     }
   }
 
@@ -215,16 +224,17 @@ export class DashboardComponent implements OnInit {
       await this.barterService.updateRequestStatus(requestId, status);
       await this.loadBarterRequests();
 
-      const statusMessage = status === 'accepted' ? 'accepted' : 'rejected';
-      alert(`Barter request ${statusMessage} successfully!`);
+      const statusMessage = status === 'accepted' ? 'acceptée' : 'rejetée';
+      this.snackbar.success(`Demande d'échange ${statusMessage} avec succès !`);
     } catch (error) {
       console.error('Error updating request status:', error);
-      alert('Failed to update request status. Please try again.');
+      this.snackbar.error('Échec de la mise à jour du statut. Veuillez réessayer.');
     }
   }
 
   logout(): void {
     this.authService.logout();
+    this.snackbar.info('Vous avez été déconnecté');
     this.router.navigate(['/login']);
   }
 }

@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { LoginRequest } from '../auth.models';
+import { SnackbarService } from '../../core/snackbar.service';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -11,6 +12,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login',
@@ -24,7 +26,8 @@ import { MatIconModule } from '@angular/material/icon';
     MatInputModule,
     MatButtonModule,
     MatProgressSpinnerModule,
-    MatIconModule
+    MatIconModule,
+    MatSnackBarModule
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
@@ -40,7 +43,8 @@ export class LoginComponent {
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private snackbar: SnackbarService
   ) {}
 
   onSubmit(): void {
@@ -52,11 +56,13 @@ export class LoginComponent {
     this.authService.login(this.loginData).subscribe({
       next: (response) => {
         console.log('Login successful:', response);
+        this.snackbar.success('Connexion réussie !');
         this.router.navigate(['/dashboard']);
       },
       error: (error) => {
         console.error('Login error:', error);
-        this.error.set(error.error?.message || 'Échec de la connexion. Veuillez réessayer.');
+        const errorMessage = error.error?.message || 'Échec de la connexion. Veuillez réessayer.';
+        this.snackbar.error(errorMessage);
         this.loading.set(false);
       },
       complete: () => {

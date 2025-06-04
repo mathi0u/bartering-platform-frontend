@@ -94,3 +94,180 @@ body {
     padding: 10px;
   }
 }
+
+/* Snackbar Styles - Multiple targeting approaches for compatibility */
+
+/* Primary targeting - CSS custom properties */
+.mat-mdc-snack-bar-container.snackbar-success {
+  --mdc-snackbar-container-color: #4caf50 !important;
+  --mat-snack-bar-button-color: #ffffff !important;
+  --mdc-snackbar-supporting-text-color: #ffffff !important;
+}
+
+.mat-mdc-snack-bar-container.snackbar-error {
+  --mdc-snackbar-container-color: #f44336 !important;
+  --mat-snack-bar-button-color: #ffffff !important;
+  --mdc-snackbar-supporting-text-color: #ffffff !important;
+}
+
+.mat-mdc-snack-bar-container.snackbar-warning {
+  --mdc-snackbar-container-color: #ff9800 !important;
+  --mat-snack-bar-button-color: #ffffff !important;
+  --mdc-snackbar-supporting-text-color: #ffffff !important;
+}
+
+.mat-mdc-snack-bar-container.snackbar-info {
+  --mdc-snackbar-container-color: #2196f3 !important;
+  --mat-snack-bar-button-color: #ffffff !important;
+  --mdc-snackbar-supporting-text-color: #ffffff !important;
+}
+
+/* Direct background color targeting */
+.snackbar-success {
+  background-color: #4caf50 !important;
+  color: white !important;
+}
+
+.snackbar-error {
+  background-color: #f44336 !important;
+  color: white !important;
+}
+
+.snackbar-warning {
+  background-color: #ff9800 !important;
+  color: white !important;
+}
+
+.snackbar-info {
+  background-color: #2196f3 !important;
+  color: white !important;
+}
+
+/* Target inner elements */
+.snackbar-success .mat-mdc-snack-bar-surface,
+.snackbar-success .mdc-snackbar__surface {
+  background-color: #4caf50 !important;
+  color: white !important;
+}
+
+.snackbar-error .mat-mdc-snack-bar-surface,
+.snackbar-error .mdc-snackbar__surface {
+  background-color: #f44336 !important;
+  color: white !important;
+}
+
+.snackbar-warning .mat-mdc-snack-bar-surface,
+.snackbar-warning .mdc-snackbar__surface {
+  background-color: #ff9800 !important;
+  color: white !important;
+}
+
+.snackbar-info .mat-mdc-snack-bar-surface,
+.snackbar-info .mdc-snackbar__surface {
+  background-color: #2196f3 !important;
+  color: white !important;
+}
+
+/* Enhanced styling */
+.mat-mdc-snack-bar-container {
+  border-radius: 8px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+.mat-mdc-snack-bar-label {
+  font-weight: 500 !important;
+  color: inherit !important;
+}
+
+.mat-mdc-button.mat-mdc-snack-bar-action {
+  font-weight: bold !important;
+  color: white !important;
+}
+
+/* Global snackbar text color */
+.snackbar-success .mat-mdc-snack-bar-label,
+.snackbar-error .mat-mdc-snack-bar-label,
+.snackbar-warning .mat-mdc-snack-bar-label,
+.snackbar-info .mat-mdc-snack-bar-label {
+  color: white !important;
+}
+
+/* Alternative targeting - in case the above doesn't work */
+.cdk-overlay-pane .snackbar-success,
+.cdk-overlay-pane .snackbar-error,
+.cdk-overlay-pane .snackbar-warning,
+.cdk-overlay-pane .snackbar-info {
+  border-radius: 8px !important;
+  overflow: hidden !important;
+}
+
+.cdk-overlay-pane .snackbar-success * {
+  background-color: #4caf50 !important;
+  color: white !important;
+}
+
+.cdk-overlay-pane .snackbar-error * {
+  background-color: #f44336 !important;
+  color: white !important;
+}
+
+.cdk-overlay-pane .snackbar-warning * {
+  background-color: #ff9800 !important;
+  color: white !important;
+}
+
+.cdk-overlay-pane .snackbar-info * {
+  background-color: #2196f3 !important;
+  color: white !important;
+}
+
+/* Most aggressive targeting */
+.snackbar-success,
+.snackbar-success *,
+.snackbar-success .mat-mdc-snack-bar-container,
+.snackbar-success .mat-mdc-snack-bar-surface,
+.snackbar-success .mdc-snackbar,
+.snackbar-success .mdc-snackbar__surface {
+  background-color: #4caf50 !important;
+  color: white !important;
+}
+
+.snackbar-error,
+.snackbar-error *,
+.snackbar-error .mat-mdc-snack-bar-container,
+.snackbar-error .mat-mdc-snack-bar-surface,
+.snackbar-error .mdc-snackbar,
+.snackbar-error .mdc-snackbar__surface {
+  background-color: #f44336 !important;
+  color: white !important;
+}
+
+.snackbar-warning,
+.snackbar-warning *,
+.snackbar-warning .mat-mdc-snack-bar-container,
+.snackbar-warning .mat-mdc-snack-bar-surface,
+.snackbar-warning .mdc-snackbar,
+.snackbar-warning .mdc-snackbar__surface {
+  background-color: #ff9800 !important;
+  color: white !important;
+}
+
+.snackbar-info,
+.snackbar-info *,
+.snackbar-info .mat-mdc-snack-bar-container,
+.snackbar-info .mat-mdc-snack-bar-surface,
+.snackbar-info .mdc-snackbar,
+.snackbar-info .mdc-snackbar__surface {
+  background-color: #2196f3 !important;
+  color: white !important;
+}
+
+/* Custom snackbar container styling */
+.custom-snackbar-container {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+.custom-snackbar-container .mat-mdc-snack-bar-container {
+  padding: 0 !important;
+  background: transparent !important;
+}
