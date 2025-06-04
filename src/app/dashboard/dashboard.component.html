@@ -4,10 +4,54 @@
         DIOKALANTE
   </span>
   <span class="spacer"></span>
-  <button mat-raised-button color="accent" (click)="logout()">
-    <mat-icon>logout</mat-icon>
-    Déconnexion
-  </button>
+  
+  <!-- Profile Menu -->
+  @if (authService.currentUser(); as user) {
+    <button mat-button [matMenuTriggerFor]="profileMenu" class="profile-menu-trigger">
+      <mat-icon>person</mat-icon>
+      <span class="user-name">{{ user.name }}</span>
+      <mat-icon>arrow_drop_down</mat-icon>
+    </button>
+    
+    <mat-menu #profileMenu="matMenu" class="profile-menu">
+      <!-- Profile Header -->
+      <div class="profile-header" mat-menu-item disabled>
+        <div class="profile-avatar">
+          <mat-icon>person</mat-icon>
+        </div>
+        <div class="profile-info">
+          <div class="name">{{ user.name }}</div>
+          <div class="email">{{ user.email }}</div>
+        </div>
+      </div>
+      
+      <mat-divider></mat-divider>
+      
+      <!-- Profile Stats -->
+      <div mat-menu-item disabled class="stats-item">
+        <mat-icon>inventory</mat-icon>
+        <span>{{ myItems().length }} article(s)</span>
+      </div>
+      
+      <div mat-menu-item disabled class="stats-item">
+        <mat-icon>swap_horiz</mat-icon>
+        <span>{{ receivedRequests().length }} demande(s) reçue(s)</span>
+      </div>
+      
+      <div mat-menu-item disabled class="stats-item">
+        <mat-icon>send</mat-icon>
+        <span>{{ sentRequests().length }} demande(s) envoyée(s)</span>
+      </div>
+      
+      <mat-divider></mat-divider>
+      
+      <!-- Logout Button -->
+      <button mat-menu-item (click)="logout()" class="logout-item">
+        <mat-icon>logout</mat-icon>
+        <span>Déconnexion</span>
+      </button>
+    </mat-menu>
+  }
 </mat-toolbar>
 
 <div class="dashboard-container">

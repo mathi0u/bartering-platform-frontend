@@ -52,6 +52,17 @@ export class AuthService {
     const token = localStorage.getItem(this.tokenKey);
     if (token) {
       this.isAuthenticated.set(true);
+      // Récupérer les informations du profil utilisateur
+      this.getProfile().subscribe({
+        next: (user: any) => {
+          this.currentUser.set(user);
+        },
+        error: (error) => {
+          console.error('Erreur lors de la récupération du profil:', error);
+          // En cas d'erreur, supprimer le token invalide
+          this.logout();
+        }
+      });
     }
   }
 

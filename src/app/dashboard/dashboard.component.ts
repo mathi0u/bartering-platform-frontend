@@ -18,6 +18,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatDividerModule } from '@angular/material/divider';
 
 @Component({
   selector: 'app-dashboard',
@@ -35,7 +37,9 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     MatSelectModule,
     MatDialogModule,
     MatSnackBarModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    MatMenuModule,
+    MatDividerModule
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
