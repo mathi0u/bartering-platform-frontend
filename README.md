@@ -14,15 +14,13 @@ A modern Angular 18 frontend application for a bartering platform where users ca
 
 ## Technology Stack
 
-- **Angular 18** - Modern web framework
+- **Angular 20** - Modern web framework
 - **Angular Material** - UI component library
 - **TypeScript** - Type-safe JavaScript
-- **RxJS** - Reactive programming
-- **Angular Signals** - Reactive state management
 
 ## Prerequisites
 
-- Node.js (v18 or higher)
+- Node.js (v20 or higher)
 - npm or yarn
 - Angular CLI
 
@@ -102,15 +100,3 @@ The frontend communicates with the NestJS backend through RESTful APIs:
 - Implements reactive patterns with Angular signals
 - Material Design for consistent UI/UX
 - Responsive design for mobile and desktop
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
-
-## License
-
-This project is licensed under the MIT License.
